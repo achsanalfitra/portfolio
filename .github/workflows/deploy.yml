@@ -26,12 +26,12 @@ jobs:
         version: 'latest'
 
     - name: Build Dioxus App
-        working-directory: ./smg-portfolio 
-        run: |
-          dx build --release --platform web --base-path "/portfolio/" 
+      working-directory: ./smg-portfolio 
+      run: |
+        dx build --release --platform web --base-path "/portfolio/" 
           
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: smg-portfolio/dist 
-          branch: gh-pages
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: smg-portfolio/dist 
+        branch: gh-pages
