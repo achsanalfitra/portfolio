@@ -35,10 +35,15 @@ jobs:
         mkdir -p dist
         cp -r target/dx/smg-portfolio/release/web/public/* dist/
         
-        sed -i 's|/assets/|assets/|g' dist/index.html
-        sed -i 's|/./assets/|assets/|g' dist/index.html
+        # 1. First, fix the glitchy Dioxus "/./" paths
+        sed -i 's|/./assets/|/portfolio/assets/|g' dist/index.html
         
-        # Verify the CSS line in the logs to be sure
+        # 2. Then, fix any remaining absolute "/assets/" paths (like the CSS)
+        # Note: We use a specific pattern to avoid doubling the prefix
+        sed -i 's|=\"/assets/|=\"/portfolio/assets/|g' dist/index.html
+        
+        # 3. Verify specifically for the CSS link
+        echo "Final index.html check:"
         grep ".css" dist/index.html
           
     - name: Deploy to GitHub Pages
