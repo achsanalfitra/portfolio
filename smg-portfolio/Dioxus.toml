@@ -7,7 +7,7 @@ base_path = "portfolio"
 title = "smg-portfolio"
 
 [web.resource]
-style = []
+style = ["main.css"]
 script = []
 
 [web.resource.dev]
