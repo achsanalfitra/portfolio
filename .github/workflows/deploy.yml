@@ -18,23 +18,70 @@ jobs:
       with:
         targets: wasm32-unknown-unknown
 
-    # Install Dioxus CLI (dx) instead of Trunk
-    - name: Install Dioxus CLI
+    # Install the PREBUILT BINARY (0.6.3) to skip dependency hell
+    - name: Install Dioxus CLI (Binary)
       run: |
-        if ! command -v dx &> /dev/null; then
-          cargo install dioxus-cli
-        fi
+        curl -L https://github.com/DioxusLabs/dioxus/releases/download/v0.6.3/dx-x86_64-unknown-linux-gnu.tar.gz | tar -xz
+        chmod +x dx
+        sudo mv dx /usr/local/bin/
+        dx --version
 
     - name: Build Dioxus App
       working-directory: ./smg-portfolio 
       run: |
-        dx build --release --platform web --base-path "/portfolio/" 
-        # Debugging: Confirm the folder exists where we think it does
-        ls -d dist/
+        # 1. Force the output to 'dist' using the --outdir flag
+        # 2. ignore-wasm-opt is implied if it fails, but we force the location here
+        dx build --release --platform web --base-path "/portfolio/" --outdir dist
+        
+        # 3. Sanity check: ensure the folder exists in the sub-directory
+        ls -la dist/
           
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        # This path is relative to the repository root
-        folder: ./smg-portfolio/dist 
+        # This path points exactly to where we forced the output
+        folder: smg-portfolio/dist 
+        branch: gh-pagesname: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: wasm32-unknown-unknown
+
+    # Install the PREBUILT BINARY (0.6.3) to skip dependency hell
+    - name: Install Dioxus CLI (Binary)
+      run: |
+        curl -L https://github.com/DioxusLabs/dioxus/releases/download/v0.6.3/dx-x86_64-unknown-linux-gnu.tar.gz | tar -xz
+        chmod +x dx
+        sudo mv dx /usr/local/bin/
+        dx --version
+
+    - name: Build Dioxus App
+      working-directory: ./smg-portfolio 
+      run: |
+        # 1. Force the output to 'dist' using the --outdir flag
+        # 2. ignore-wasm-opt is implied if it fails, but we force the location here
+        dx build --release --platform web --base-path "/portfolio/" --outdir dist
+        
+        # 3. Sanity check: ensure the folder exists in the sub-directory
+        ls -la dist/
+          
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        # This path points exactly to where we forced the output
+        folder: smg-portfolio/dist 
         branch: gh-pages
