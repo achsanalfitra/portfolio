@@ -25,9 +25,13 @@ jobs:
       with:
         version: 'latest'
 
-    - name: Deploy Dioxus app
-      uses: DioxusLabs/deploy-action@0.1.2 # Check the marketplace for the latest version
-      with:
-        # Optional: specify a base path if your site is hosted at a URL like username.github.io/repo-name
-        base-path: /portfolio/ 
-        # This action automatically builds and pushes the static files to the gh-pages branch
+    - name: Build Dioxus App
+        working-directory: ./smg-portfolio 
+        run: |
+          dx build --release --platform web --base-path "/portfolio/" 
+          
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: smg-portfolio/dist 
+          branch: gh-pages
