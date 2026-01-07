@@ -26,7 +26,7 @@ jobs:
         version: 'latest'
 
     - name: Deploy Dioxus app
-      uses: DioxusLabs/deploy-action@v0.1.2 # Check the marketplace for the latest version
+      uses: DioxusLabs/deploy-action@0.1.2 # Check the marketplace for the latest version
       with:
         # Optional: specify a base path if your site is hosted at a URL like username.github.io/repo-name
         base-path: /portfolio/ 
