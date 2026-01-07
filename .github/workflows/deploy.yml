@@ -18,10 +18,11 @@ jobs:
       with:
         targets: wasm32-unknown-unknown
 
-    # Install the PREBUILT BINARY (0.6.3) to skip dependency hell
-    - name: Install Dioxus CLI (Binary)
+    - name: Install Dioxus CLI (0.6.3 Binary)
       run: |
-        curl -L https://github.com/DioxusLabs/dioxus/releases/download/v0.6.3/dx-x86_64-unknown-linux-gnu.tar.gz | tar -xz
+        # Exact URL from the 0.6.3 release assets
+        wget https://github.com/DioxusLabs/dioxus/releases/download/v0.6.3/dx-x86_64-unknown-linux-gnu-v0.6.3.tar.gz
+        tar -xzf dx-x86_64-unknown-linux-gnu-v0.6.3.tar.gz
         chmod +x dx
         sudo mv dx /usr/local/bin/
         dx --version
