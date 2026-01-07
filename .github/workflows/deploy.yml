@@ -31,10 +31,12 @@ jobs:
       working-directory: ./smg-portfolio 
       run: |
         dx build --release --platform web
+        
         mkdir -p dist
         cp -r target/dx/smg-portfolio/release/web/public/* dist/
-        sed -i 's|/./assets|assets|g' dist/index.html
-        grep "assets/" dist/index.html
+        sed -i 's|assets/|/portfolio/assets/|g' dist/index.html
+
+        grep "href=" dist/index.html
           
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
