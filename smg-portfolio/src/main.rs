@@ -19,15 +19,22 @@ fn main() {
 fn App() -> Element {
     let mut stack_items = use_signal(|| vec![]);
 
-    let mut handle_pop = move |_| {
-        if let Ok(Some(_)) = MAGIC_DATA.pop() {
-            let new_len = stack_items.read().len().saturating_sub(1);
-            if new_len == 0 {
-                stack_items.set(vec![]);
-            } else {
-                stack_items.set(vec![new_len as i32; new_len]);
+    let handle_pop = move |_| {
+        spawn(async move {
+            // 1. Atomic POP from rsmg_core
+            if let Ok(Some(_)) = MAGIC_DATA.pop() {
+                let new_len = stack_items.read().len().saturating_sub(1);
+                
+                // 2. Snapshot Update
+                if new_len == 0 {
+                    stack_items.set(vec![]);
+                } else {
+                    // Creating a large Vec can be O(n). Spawning ensures
+                    // this doesn't block a frame-paint if new_len is large.
+                    stack_items.set(vec![new_len as i32; new_len]);
+                }
             }
-        }
+        });
     };
 
     rsx! {
@@ -59,59 +66,78 @@ fn App() -> Element {
                     }
                 }
 
-                div { class: "controls",
+            div { class: "controls",
                     button {
                         class: "btn btn-inc",
                         onclick: move |_| {
-                            let current_val = stack_items.read().len() as i32 + 1;
-                            MAGIC_DATA.push(LinkedStackNode::new(current_val));
-                            stack_items.set(vec![current_val; current_val as usize]);
+                            spawn(async move {
+                                // 1. Perform the atomic work immediately
+                                let current_val = stack_items.read().len() as i32 + 1;
+                                MAGIC_DATA.push(LinkedStackNode::new(current_val));
+                                
+                                // 2. Sync the UI snapshot
+                                stack_items.set(vec![current_val; current_val as usize]);
+                            });
                         },
                         "PUSH"
                     }
 
-                    // THE BURST BUTTON
                     button {
                         class: "btn btn-burst",
                         onclick: move |_| {
+                            let workers = 4;
+                            let per_worker = 25;
                             let start_val = stack_items.read().len() as i32;
-                            let final_val = start_val + 100;
 
-                            // Atomic stress test: 100 pushes in a tight loop
-                            for i in (start_val + 1)..=final_val {
-                                MAGIC_DATA.push(LinkedStackNode::new(i));
+                            // Spawn 4 independent workers
+                            for w in 0..workers {
+                                spawn(async move {
+                                    for i in 1..=per_worker {
+                                        // Each worker calculates its own range of values
+                                        let current_val = start_val + (w * per_worker) + i;
+
+                                        // 1. ATOMIC PUSH: The engine handles the thread-safety
+                                        MAGIC_DATA.push(LinkedStackNode::new(current_val));
+
+                                        // 2. THE UPDATER: Every worker fights to set the UI state
+                                        // You will see the counter "flicker" between ranges 
+                                        // as different workers hit their set() calls.
+                                        stack_items.set(vec![current_val; current_val as usize]);
+
+                                        // 3. YIELD: Necessary to keep the workers interleaving
+                                        gloo_timers::future::TimeoutFuture::new(0).await;
+                                    }
+                                });
                             }
-
-                            // Massive UI sync
-                            stack_items.set(vec![final_val; final_val as usize]);
                         },
                         "BURST x100"
                     }
-
                     button { class: "btn btn-dec", onclick: handle_pop, "POP" }
 
                     button {
                         class: "btn btn-reset",
                         onclick: move |_| {
-                            // 1. Physically drain the Atomic Stack in memory
-                            // This is where rsmg-core does the heavy lifting
-                            let mut dropped = 0;
-                            while let Ok(Some(_)) = MAGIC_DATA.pop() {
-                                dropped += 1;
-                            }
-
-                            // 2. Wipe the UI snapshot
-                            stack_items.set(vec![]);
-
-                            // Log it to the console to prove the "silent" work
-                            println!("Atomic Drain Complete: {} nodes reclaimed.", dropped);
+                            spawn(async move {
+                                let mut dropped = 0;
+                                // Pop until empty, but yield every 50 items to keep the site responsive
+                                while let Ok(Some(_)) = MAGIC_DATA.pop() {
+                                    dropped += 1;
+                                    
+                                    if dropped % 50 == 0 {
+                                        stack_items.set(vec![0; (dropped % 10) as usize]); // Fun visual jitter
+                                        gloo_timers::future::TimeoutFuture::new(1).await;
+                                    }
+                                }
+                                stack_items.set(vec![]);
+                                println!("Atomic Drain Complete: {} nodes reclaimed.", dropped);
+                            });
                         },
                         "DRAIN ALL"
                     }
                 }
 
                 div { class: "stack-visualizer",
-                    for (i , val) in stack_items.read().iter().enumerate() {
+                    for (i, val) in stack_items.read().iter().enumerate() {
                         div {
                             class: "stack-node",
                             key: "{val}-{i}",
