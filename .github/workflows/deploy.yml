@@ -29,9 +29,12 @@ jobs:
       working-directory: ./smg-portfolio 
       run: |
         dx build --release --platform web --base-path "/portfolio/" 
+        # Debugging: Confirm the folder exists where we think it does
+        ls -d dist/
           
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        folder: smg-portfolio/dist 
+        # This path is relative to the repository root
+        folder: ./smg-portfolio/dist 
         branch: gh-pages
