@@ -1,46 +1,439 @@
-/* App-wide styling */
-body {
-    background-color: #0f1116;
-    color: #ffffff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 20px;
+:root {
+    --bg: #ECEFF4;
+    /* Nord Snow Storm */
+    --accent: #5E81AC;
+    /* Nord Frost Blue */
+    --text: #2E3440;
+    /* Nord Polar Night */
+    --card-bg: #E5E9F0;
+    /* Nord Light Gray */
+    --border: #D8DEE9;
+    /* Nord Border Gray */
+    --shadow: rgba(46, 52, 64, 0.1);
+
+    /* Consistent spacing & sizing */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --border-width: 3px;
+    --chip-padding: 12px 24px;
+    --btn-padding: 16px 0;
+    --stack-width: 60px;
+    --stack-font-size: 1.4rem;
+    --gap: 16px;
+    --margin-section: 40px;
+
+    /* Header/Footer symmetry */
+    --header-footer-padding-y: 40px;
+    --header-footer-padding-x: 24px;
+    --header-footer-bg: linear-gradient(180deg, var(--bg) 0%, var(--card-bg) 100%);
+    --header-footer-border: var(--border-width) solid var(--border);
 }
 
-#hero {
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', 'JetBrains Mono', 'Roboto Mono', monospace;
     margin: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
 }
 
-#links {
-    width: 400px;
-    text-align: left;
-    font-size: x-large;
-    color: white;
+main {
+    padding: 0px;
+}
+
+/* Header is now styled similar to the magic-area ("bottom" card) */
+#hero {
+    padding: var(--header-footer-padding-y) var(--header-footer-padding-x);
+    text-align: center;
+    border-bottom: var(--header-footer-border);
+    width: 100%;
+    max-width: 800px;
+    padding: 40px 40px 20px 40px;
+    box-sizing: border-box;
+    background: var(--header-footer-bg);
+    /* To match card corners visually, just slightly round bottom corners */
+    border-bottom-left-radius: var(--radius-md);
+    border-bottom-right-radius: var(--radius-md);
+    box-shadow: 0 8px 24px var(--shadow);
+}
+
+#header-logo {
+    width: 80px;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 4px 8px var(--shadow));
+}
+
+h1 {
+    font-size: 2.2rem;
+    letter-spacing: -1px;
+    margin: 0;
+    font-weight: 900;
+    text-transform: uppercase;
+    /* Match visual hierarchy to main card area: */
+    line-height: 1.15;
+    /* Slight reduced spacing on smaller screens handled below */
+}
+
+.hero-subtitle {
+    margin-top: var(--gap);
+    margin-bottom: var(--gap);
+    padding: 16px 0;
+}
+
+.hero-subtitle p {
+    font-size: 1.08rem;
+    color: var(--text);
+    opacity: 0.82;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin: 0;
+    line-height: 1.55;
+}
+
+/* Experience Timeline - Blocky Nord Light Style */
+.experience-timeline {
+    margin-top: 0px;
+    margin-bottom: 24px;
+    width: 100%;
+    padding: 20px 18px 10px 18px;
+    background: var(--card-bg, #E5E9F0);
+    border: var(--border-width, 2px) solid var(--border, #D8DEE9);
+    border-radius: var(--radius-md, 12px);
+    box-shadow: 0 4px 12px rgba(59, 66, 82, 0.07);
     display: flex;
     flex-direction: column;
+    gap: 14px;
+    box-sizing: border-box;
+    text-align: left;
 }
 
-#links a {
-    color: white;
+.exp-item {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: var(--radius-sm, 6px);
+    padding: 14px 14px;
+    border-left: 4px solid var(--accent, #88C0D0);
+    box-shadow: 0 1px 4px rgba(76, 86, 106, 0.06);
+    text-align: left;
+}
+
+.exp-date {
+    font-size: 0.89rem;
+    font-weight: 700;
+    color: var(--accent, #5E81AC);
+    letter-spacing: 0.4px;
+    margin-bottom: 1px;
+    text-transform: uppercase;
+    opacity: 0.91;
+    text-align: left;
+}
+
+.exp-role {
+    font-size: 0.95rem;
+    font-weight: 550;
+    color: var(--text, #2E3440);
+    letter-spacing: 0.25px;
+    margin-top: 1px;
+    text-transform: none;
+    opacity: 0.96;
+    text-align: left;
+}
+
+.link-chip {
+    padding: var(--chip-padding);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
     text-decoration: none;
-    margin-top: 20px;
-    margin: 10px 0px;
-    border: white 1px solid;
-    border-radius: 5px;
-    padding: 10px;
+    color: var(--text);
+    font-size: 1rem;
+    margin: 0 14px 14px 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s;
+    background: var(--bg);
+    min-width: 110px;
+    display: inline-block;
+    box-sizing: border-box;
 }
 
-#links a:hover {
-    background-color: #1f1f1f;
+.link-chip:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+#magic-area {
+    margin-top: var(--margin-section);
+    max-width: 800px;
+    width: 100%;
+    padding: 40px;
+    box-sizing: border-box;
+    background: var(--card-bg);
+    border: var(--border-width) solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 24px var(--shadow);
+}
+
+.engine-spec {
+    text-align: left;
+    background: #E5E9F0;
+    padding: 24px;
+    border-radius: var(--radius-md);
+    border-left: 5px solid var(--accent);
+    margin-bottom: 30px;
+    font-size: 1rem;
+    line-height: 1.6;
+    box-shadow: 0 2px 8px rgba(46, 52, 64, 0.08);
+}
+
+.small-link-chip {
+    padding: 2px 12px;
+    /* Significantly smaller padding */
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 0.88rem;
+    background: var(--bg);
+    margin-left: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+    display: inline-block;
+    box-sizing: border-box;
+    min-height: 12px;
+    /* Make height really small */
+    line-height: 1;
+}
+
+.small-link-chip:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-1px);
+    /* Strong blue-white glow */
+    box-shadow: 0 0 0 2px var(--accent), 0 0 12px 4px #eef6ff, 0 2px 8px var(--shadow);
+}
+
+
+
+.spec-line {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    margin-bottom: 12px;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.spec-label {
+    color: #4C566A;
+    font-weight: 700;
+    margin-right: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.88rem;
+}
+
+.spec-value {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.spec-description {
+    color: #3B4252;
+    margin-bottom: 18px;
+    opacity: 0.9;
+    font-size: 1rem;
+}
+
+.bonus-challenge {
+    font-weight: 800;
+    color: #BF616A;
+    background: rgba(191, 97, 106, 0.1);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+    border: 2px dashed #BF616A;
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    display: inline-block;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.bonus-challenge:hover {
+    background: rgba(191, 97, 106, 0.15);
+    transform: translateX(3px);
+}
+
+.status-bar {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.93rem;
+    margin-bottom: var(--gap);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.status-bar .value {
+    color: var(--accent);
+    margin-left: 12px;
+    font-weight: 800;
+}
+
+.controls {
+    display: flex;
+    gap: var(--gap);
+    margin-bottom: var(--margin-section);
+}
+
+.btn {
+    flex: 1;
+    padding: var(--btn-padding);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 800;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
     cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+    font-family: 'Space Grotesk', 'JetBrains Mono', monospace;
+    min-width: 120px;
+    margin: 0 8px 0 0;
 }
 
-#header {
-    max-width: 1200px;
+.btn-inc {
+    background: var(--accent);
+    color: #fff;
+    border: var(--border-width) solid var(--accent);
 }
 
+.btn-dec {
+    background: var(--bg);
+    border: var(--border-width) solid var(--border);
+    color: var(--text);
+}
 
+/* btn-burst: shade green like bright but nordish still */
+.btn-burst {
+    background: #A3BE8C;
+    /* Nord Frost Green */
+    color: #2E3440;
+    border: var(--border-width) solid #A3BE8C;
+}
 
+.btn-burst:hover {
+    background: #8FBC7B;
+    /* Vibrant, but still nordish green */
+    border-color: #88C0D0;
+    color: #fff;
+}
+
+/* btn-reset: darker shade of red but still nordish */
+.btn-reset {
+    background: #BF616A;
+    /* Nord Red */
+    color: #fff;
+    border: var(--border-width) solid #BF616A;
+}
+
+.btn-reset:hover {
+    background: #943441;
+    /* A bit darker, still nord-inspired */
+    border-color: #BF616A;
+    color: #fff;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px var(--shadow);
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+.stack-visualizer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap);
+    justify-content: center;
+    min-height: 100px;
+}
+
+.stack-node {
+    width: var(--stack-width);
+    height: var(--stack-width);
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    border: var(--border-width) solid var(--accent);
+    font-weight: 900;
+    font-size: var(--stack-font-size);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+
+    transition:
+        background-color 0.3s ease,
+        transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    user-select: none;
+}
+
+/* The Hover State: Nord Frost Highlight */
+.stack-node:hover {
+    background-color: #88C0D0;
+    border-color: #81A1C1;
+    transform: scale(1.15) translateY(-5px);
+    box-shadow: 0 10px 20px rgba(94, 129, 172, 0.3);
+    z-index: 10;
+}
+
+/* Subtle "Active" state when clicked */
+.stack-node:active {
+    transform: scale(0.95);
+    filter: brightness(0.9);
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.8) rotate(0);
+        opacity: 0.8;
+    }
+
+    to {
+        transform: scale(1) rotate(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 600px) {
+    #hero {
+        padding: 26px 8px;
+        border-bottom-left-radius: var(--radius-sm);
+        border-bottom-right-radius: var(--radius-sm);
+    }
+
+    h1 {
+        font-size: 1.4rem;
+    }
+
+    #magic-area {
+        padding: 16px;
+    }
+}
