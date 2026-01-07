@@ -30,11 +30,8 @@ jobs:
     - name: Build Dioxus App
       working-directory: ./smg-portfolio 
       run: |
-        # 1. Force the output to 'dist' using the --outdir flag
-        # 2. ignore-wasm-opt is implied if it fails, but we force the location here
-        dx build --release --platform web --base-path "/portfolio/" --outdir dist
+        dx build --release --platform web -- --base-path /portfolio/ --out-dir dist
         
-        # 3. Sanity check: ensure the folder exists in the sub-directory
         ls -la dist/
           
     - name: Deploy to GitHub Pages
