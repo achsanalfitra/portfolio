@@ -30,11 +30,18 @@ jobs:
     - name: Build Dioxus App
       working-directory: ./smg-portfolio 
       run: |
-        dx build --release --platform web
+        # Force the base-path to be /portfolio/
+        dx build --release --platform web -- --base-path /portfolio/
+        
+        # If Dioxus puts it in target/ instead of dist/, move it
         if [ ! -d "dist" ]; then
           mkdir -p dist
           cp -r target/dx/smg-portfolio/release/web/public/* dist/
         fi
+        
+        # NUCLEAR OPTION: Fix the index.html paths manually if dx messed them up
+        # This replaces "/./assets" with "assets" in the generated index.html
+        sed -i 's|/./assets|assets|g' dist/index.html
           
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
