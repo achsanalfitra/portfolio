@@ -30,9 +30,11 @@ jobs:
     - name: Build Dioxus App
       working-directory: ./smg-portfolio 
       run: |
-        dx build --release --platform web -- --base-path /portfolio/ --out-dir dist
-        
-        ls -la dist/
+        dx build --release --platform web
+        if [ ! -d "dist" ]; then
+          mkdir -p dist
+          cp -r target/dx/smg-portfolio/release/web/public/* dist/
+        fi
           
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
