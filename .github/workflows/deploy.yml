@@ -22,7 +22,7 @@ jobs:
     - name: Install Dioxus CLI
       run: |
         if ! command -v dx &> /dev/null; then
-          cargo install dioxus-cli --version 0.6.0-alpha.5
+          cargo install dioxus-cli
         fi
 
     - name: Build Dioxus App
