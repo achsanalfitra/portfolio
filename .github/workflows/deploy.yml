@@ -34,17 +34,21 @@ jobs:
         
         mkdir -p dist
         cp -r target/dx/smg-portfolio/release/web/public/* dist/
-        
-        # 1. First, fix the glitchy Dioxus "/./" paths
+
+        # 1. Fix the JS/WASM paths (which you already have working)
+        sed -i 's|assets/|/portfolio/assets/|g' dist/index.html
         sed -i 's|/./assets/|/portfolio/assets/|g' dist/index.html
+
+        # 2. Fix the Hardcoded CSS line
+        # We find the actual hashed filename in the assets folder
+        REAL_CSS=$(ls dist/assets/main-*.css | head -n 1 | xargs basename)
         
-        # 2. Then, fix any remaining absolute "/assets/" paths (like the CSS)
-        # Note: We use a specific pattern to avoid doubling the prefix
-        sed -i 's|=\"/assets/|=\"/portfolio/assets/|g' dist/index.html
-        
-        # 3. Verify specifically for the CSS link
-        echo "Final index.html check:"
-        grep ".css" dist/index.html
+        # We replace the broken "main.css" with the correct full path
+        sed -i "s|href=\"main.css\"|href=\"/portfolio/assets/$REAL_CSS\"|g" dist/index.html
+
+        # 3. Double Check
+        echo "Verifying CSS path in index.html:"
+        grep "stylesheet" dist/index.html
           
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
