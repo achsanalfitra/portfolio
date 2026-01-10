@@ -35,17 +35,6 @@ jobs:
         mkdir -p dist
         cp -r target/dx/smg-portfolio/release/web/public/* dist/
 
-        # 1. Fix the JS/WASM paths (which you already have working)
-        sed -i 's|assets/|/portfolio/assets/|g' dist/index.html
-        sed -i 's|/./assets/|/portfolio/assets/|g' dist/index.html
-
-        # 2. Fix the Hardcoded CSS line
-        # We find the actual hashed filename in the assets folder
-        REAL_CSS=$(ls dist/assets/main-*.css | head -n 1 | xargs basename)
-        
-        # We replace the broken "main.css" with the correct full path
-        sed -i "s|href=\"main.css\"|href=\"/portfolio/assets/$REAL_CSS\"|g" dist/index.html
-
         # 3. Double Check
         echo "Verifying CSS path in index.html:"
         grep "stylesheet" dist/index.html
