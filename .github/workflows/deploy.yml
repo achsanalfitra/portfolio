@@ -30,7 +30,7 @@ jobs:
     - name: Build Dioxus App
       working-directory: ./smg-portfolio 
       run: |
-        dx build --release --platform web
+        dx build --release
         
         mkdir -p dist
         cp -r target/dx/smg-portfolio/release/web/public/* dist/
