@@ -20,9 +20,9 @@ jobs:
 
     - name: Install Dioxus CLI (0.7.0 Binary)
       run: |
-        # Exact URL from the 0.7.0 release assets
-        wget https://github.com/DioxusLabs/dioxus/releases/download/v0.7.0/dx-x86_64-unknown-linux-gnu-v0.7.0.tar.gz
-        tar -xzf dx-x86_64-unknown-linux-gnu-v0.6.3.tar.gz
+        # Correct URL from the 0.7.0 release assets
+        wget https://github.com/DioxusLabs/dioxus/releases/download/v0.7.0/dx-x86_64-unknown-linux-gnu.tar.gz
+        tar -xzf dx-x86_64-unknown-linux-gnu.tar.gz
         chmod +x dx
         sudo mv dx /usr/local/bin/
         dx --version
