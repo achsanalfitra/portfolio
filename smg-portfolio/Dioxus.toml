@@ -5,6 +5,10 @@ base_path = "/portfolio/"
 
 [web.app]
 title = "smg-portfolio"
+base_path = "/portfolio/"
+
+[web.config]
+base_path = "/portfolio/"
 
 [web.resource]
 style = ["main.css"]
