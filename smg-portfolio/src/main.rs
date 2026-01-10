@@ -196,20 +196,20 @@ fn App() -> Element {
                                         gloo_timers::future::TimeoutFuture::new(20).await;
                                     }
                                     let mut log = race_log.read().clone();
-                                    log.push(
-                                        format!("Producer {} finished (10 elements)", producer_id),
-                                    );
+
+                                    // Transformer worker with limited iterations
+
+                                    // Consumer worker with limited iterations
+                                    log.push(format!("Producer {} finished (10 elements)", producer_id));
                                     if log.len() > 12 {
                                         log.remove(0);
                                     }
                                     race_log.set(log);
                                 });
                             }
-
-                            // Transformer worker with limited iterations
                             spawn(async move {
                                 let mut iterations = 0;
-                                while iterations < 50 { // Limit total iterations
+                                while iterations < 50 {
                                     let len = CONTIGUOUS_ARRAY.len();
                                     if len == 0 {
                                         gloo_timers::future::TimeoutFuture::new(50).await;
@@ -239,12 +239,10 @@ fn App() -> Element {
                                     iterations += 1;
                                 }
                             });
-
-                            // Consumer worker with limited iterations
                             spawn(async move {
                                 let mut consumed = 0;
                                 let mut iterations = 0;
-                                while iterations < 30 { // Limit total iterations
+                                while iterations < 30 {
                                     if let Ok(Some(_val)) = CONTIGUOUS_ARRAY.pop() {
                                         consumed += 1;
                                         let mut snapshot = vec![];
@@ -256,9 +254,7 @@ fn App() -> Element {
                                         array_items.set(snapshot);
                                         if consumed % 5 == 0 {
                                             let mut log = race_log.read().clone();
-                                            log.push(
-                                                format!("Consumer: {} elements consumed", consumed),
-                                            );
+                                            log.push(format!("Consumer: {} elements consumed", consumed));
                                             if log.len() > 12 {
                                                 log.remove(0);
                                             }
@@ -289,22 +285,20 @@ fn App() -> Element {
                             }
 
                             let mut log = race_log.read().clone();
-                            log.push(
 
-                                // Each worker calculates different stats on their section
+                            // Each worker calculates different stats on their section
 
-                                // Calculate statistics for this section
+                            // Calculate statistics for this section
 
-                                // Small delay to show concurrent processing
+                            // Small delay to show concurrent processing
 
-                                // Report results
+                            // Report results
 
-                                // Update visualization periodically
+                            // Update visualization periodically
 
-                                // Also calculate overall statistics
+                            // Also calculate overall statistics
 
-                                "Calculating statistics on 4 sections concurrently...".to_string(),
-                            );
+                            log.push("Calculating statistics on 4 sections concurrently...".to_string());
                             if log.len() > 12 {
                                 log.remove(0);
                             }
@@ -504,37 +498,35 @@ fn App() -> Element {
                 // Explanation Box
                 div { class: "demo-explanation",
                     h4 { "True Concurrency First Design" }
-                        ul {
-                            li {
-                                strong { "MATRIX TRANSFORM: " }
-                                "4 workers hitting different sections of the matrix at once. "
-                                "Each worker runs its own transformation logic "
-                                strong { "simultaneously without ever blocking." }
-                            }
-                            li {
-                                strong { "CONCURRENT PIPELINE: " }
-                                "2 producers pushing, 1 transformer mutating, and 1 consumer popping—"
-                                strong { "all at the same time." }
-                                " It’s a literal demonstration of lock-free producer-consumer concurrency."
-                            }
-                            li {
-                                strong { "CONCURRENT STATISTICS: " }
-                                "4 workers crunching stats (sum, avg, min, max) across different chunks simultaneously. "
-                                "A final worker aggregates the global state, "
-                                "proving the array handles concurrent reads without breaking a sweat."
-                            }
-                            li {
-                                strong { "CLICK CELLS: " }
-                                "Try clicking cells while the workers are running. "
-                                "Your manual mutations won't corrupt a thing because every index is independently accessible."
-                            }
+                    ul {
+                        li {
+                            strong { "MATRIX TRANSFORM: " }
+                            "4 workers hitting different sections of the matrix at once. "
+                            "Each worker runs its own transformation logic "
+                            strong { "simultaneously without ever blocking." }
                         }
+                        li {
+                            strong { "CONCURRENT PIPELINE: " }
+                            "2 producers pushing, 1 transformer mutating, and 1 consumer popping—"
+                            strong { "all at the same time." }
+                            " It’s a literal demonstration of lock-free producer-consumer concurrency."
+                        }
+                        li {
+                            strong { "CONCURRENT STATISTICS: " }
+                            "4 workers crunching stats (sum, avg, min, max) across different chunks simultaneously. "
+                            "A final worker aggregates the global state, "
+                            "proving the array handles concurrent reads without breaking a sweat."
+                        }
+                        li {
+                            strong { "CLICK CELLS: " }
+                            "Try clicking cells while the workers are running. "
+                            "Your manual mutations won't corrupt a thing because every index is independently accessible."
+                        }
+                    }
                 }
-
-                
             }
 
-                        // ═══════════════════════════════════════════════════════
+            // ═══════════════════════════════════════════════════════
             // LINKEDSTACK DEMO (existing)
             // ═══════════════════════════════════════════════════════
             div { id: "magic-area",
@@ -622,6 +614,42 @@ fn App() -> Element {
                             span { "{val}" }
                         }
                     }
+                }
+            } // End of interactive/main window
+        }
+
+        // Footer moved outside interactive window/main container
+        footer {
+            class: "site-footer",
+            style: "
+                margin-top: 3.5rem;
+                padding: 2.2rem 0 0.9rem 0;
+                text-align: center;
+                font-size: 1.04em;
+                background: #f5f7fa;
+                color: #444b5d;
+                border-top: 1px solid #e3eaf2;
+                opacity: 0.93;",
+            div { style: "margin-bottom: 0.4em; font-weight: 600; letter-spacing: 0.05em;",
+                a {
+                    href: "https://achsanalfitra.github.io/portfolio/",
+                    style: "color: var(--accent); text-decoration: none;",
+                    "smg-portfolio"
+                }
+                " © 2026"
+            }
+            div { style: "font-size:0.95em;",
+                "by "
+                a {
+                    href: "https://github.com/achsanalfitra",
+                    style: "color: var(--accent); text-decoration: none; font-weight: 500;",
+                    "Alfitra Heydar Achsan"
+                }
+                " · Licensed under "
+                a {
+                    href: "https://creativecommons.org/licenses/by-nc/4.0/",
+                    style: "color: var(--accent); text-decoration: underline dotted;",
+                    "CC BY-NC 4.0"
                 }
             }
         }
