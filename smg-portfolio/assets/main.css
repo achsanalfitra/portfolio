@@ -236,6 +236,25 @@ h1 {
 /* ========================================
    MAGIC AREA (LinkedStack Demo)
    ======================================== */
+#nirzweb-editor-area {
+    background: var(--card-bg);
+    border: var(--border-width) solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 24px var(--shadow);
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: var(--margin-section);
+    max-width: 800px;
+    min-width: 0;
+    padding: 40px;
+    width: calc(100% - 32px);
+}
+
+
+/* ========================================
+   MAGIC AREA (LinkedStack Demo)
+   ======================================== */
 #magic-area {
     background: var(--card-bg);
     border: var(--border-width) solid var(--border);

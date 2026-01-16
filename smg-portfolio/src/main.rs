@@ -46,6 +46,56 @@ fn App() -> Element {
         Hero {}
 
         main { class: "container",
+            // ═══════════════════════════════════════════════════════
+            // NIRZWEB EDITOR - Alpha Release Info (ON TOP)
+            // ═══════════════════════════════════════════════════════
+            div { id: "nirzweb-editor-area",
+                div { class: "engine-spec",
+                    div { class: "spec-line",
+                        span { class: "spec-label", "PROJECT:" }
+                        span { class: "spec-value", "NirzWeb Editor" }
+                        span { style: "
+                                background: #ffc107;
+                                color: #1a1d29;
+                                padding: 0.2rem 0.6rem;
+                                border-radius: 0.25rem;
+                                font-size: 0.75rem;
+                                font-weight: 700;
+                                letter-spacing: 0.05em;
+                                margin-left: 0.5rem;
+                            ",
+                            "ALPHA"
+                        }
+                    }
+                    p { class: "spec-description",
+                        "A lightweight web editor for creating static websites. "
+                        strong { "Currently in alpha testing." }
+                    }
+                    div { class: "bonus-challenge",
+                        "Important Notes: "
+                        p {"No save functionality: Your work is not automatically saved."}
+                        p {"Export button available: Download your project files."}
+                        p {"Want a real website? Send me the exported files and I'll bundle them into a production-ready website for you!."}
+                    }
+                }
+
+                div { class: "controls",
+                    a {
+                        class: "btn btn-inc",
+                        style: "padding-left: 20px; text-decoration: none;",
+                        href: "https://achsanalfitra.github.io/nirzweb-editor",
+                        target: "_blank",
+                        rel: "noopener",
+                        "LAUNCH EDITOR"
+                    }
+                    a {
+                        class: "btn btn-burst",
+                        style: "padding-left: 20px; text-decoration: none;",
+                        href: "mailto:achsanalfitra@gmail.com?subject=NirzWeb%20Export%20-%20Website%20Bundling%20Request",
+                        "SEND FILES FOR BUNDLING"
+                    }
+                }
+            }
 
 
             // ═══════════════════════════════════════════════════════
